@@ -297,6 +297,26 @@ namespace YamlDotNet.Test.Serialization
         }
 
         [Fact]
+        public void RoundtripSequenceWithTag()
+        {
+            var obj = new string[] { "bla", "bla"};
+
+            var result = DoRoundtripFromObjectTo<string[]>(
+                obj,
+                new SerializerBuilder()
+                    .WithTagMapping("!Example", typeof(string[]))
+                    .EnsureRoundtrip()
+                    .EmitDefaults()
+                    .Build(),
+                new DeserializerBuilder()
+                    .WithTagMapping("!Example", typeof(string[]))
+                    .Build()
+            );
+
+            result.ShouldBeEquivalentTo(obj);
+        }
+
+        [Fact]
         public void RoundtripAnonymousType()
         {
             var data = new { Key = 3 };
